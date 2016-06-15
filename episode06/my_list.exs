@@ -1,62 +1,49 @@
 defmodule MyList do
-  def length(list) do
-    length(list, 0)
-  end
+  def length(list), do: do_length(list, 0)
 
-  def each([], _fun) do
-    :ok
-  end
+  def each(list, fun), do: do_each(list, fun)
 
-  def each([head | tail], fun) do
+  def map(list, fun), do: do_map(list, fun, [])
+
+  def sum(list), do: do_sum(list, 0)
+
+  def reduce([head | tail], fun), do: do_reduce(tail, fun, head)
+
+  def reverse([head | tail]), do: do_reverse(tail, [head])
+
+  # private
+
+  defp do_length([], count), do: count
+  defp do_length([_head | tail], count), do: do_length(tail, count + 1)
+
+  defp do_each([], _fun), do: :ok
+  defp do_each([head | tail], fun) do
     fun.(head)
-    each(tail, fun)
+    do_each(tail, fun)
   end
 
-  def map(list, fun) do
-    map(list, fun, [])
+  defp do_map([], _fun, memo), do: :lists.reverse(memo)
+  defp do_map([head | tail], fun, memo) do
+    result = fun.(head)
+    memo = [result | memo]
+    do_map(tail, fun, memo)
   end
 
-  def sum(list) do
-    sum(list, 0)
-  end
-
-  def reduce([head | tail], fun) do
-    reduce(tail, fun, head)
-  end
-
-  defp sum([], count) do
-    count
-  end
-
-  defp sum([head | tail], count) do
+  defp do_sum([], count), do: count
+  defp do_sum([head | tail], count) do
     count = count + head
     sum(tail, count)
   end
 
-  defp reduce([], _fun, acc) do
-    acc
-  end
-
-  defp reduce([head | tail], fun, acc) do
+  defp do_reduce([], _fun, acc), do: acc
+  defp do_reduce([head | tail], fun, acc) do
     acc = fun.(head, acc)
-    reduce(tail, fun, acc)
+    do_reduce(tail, fun, acc)
   end
 
-  defp length([], count) do
-    count
-  end
-
-  defp length([_head | tail], count) do
-    length(tail, count + 1)
-  end
-
-  defp map([], _fun, memo) do
-    :lists.reverse(memo)
-  end
-
-  defp map([head | tail], fun, memo) do
-    result = fun.(head)
-    memo = [result | memo]
-    map(tail, fun, memo)
+  defp do_reverse([], acc), do: acc
+  defp do_reverse([head | tail], acc) do
+    acc = [head | acc]
+    reverse(tail, acc)
   end
 end
