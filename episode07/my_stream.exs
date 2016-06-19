@@ -19,9 +19,9 @@ defmodule MyStream do
   def sample do
     File.stream!("sample.txt")
     |> Stream.take_every(2)
-    |> Stream.map(&String.strip/1)
-    |> Stream.map(&String.capitalize/1)
-    |> Stream.filter(&String.starts_with?(&1, "D"))
+    |> Stream.filter_map(&String.starts_with?(&1, "d"), fn(word) ->
+         word |> String.strip |> String.capitalize
+       end)
     |> Enum.sort_by(&String.length/1)
   end
 end
