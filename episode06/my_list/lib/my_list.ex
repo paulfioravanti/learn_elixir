@@ -26,7 +26,7 @@ defmodule MyList do
 
   ## Examples:
 
-      iex> MyList.each([], fn -> nil end)
+      iex> MyList.each([], fn(x) -> x end)
       :ok
       iex> MyList.each([1, 2, 3], fn(num) ->
       ...>   IO.puts to_string(num)
@@ -48,7 +48,7 @@ defmodule MyList do
 
   ## Examples:
 
-      iex> MyList.map([], fn -> nil end)
+      iex> MyList.map([], fn(x) -> x end)
       []
       iex> MyList.map([1, 2, 3], fn(n) -> n * 2 end)
       [2, 4, 6]
@@ -82,17 +82,32 @@ defmodule MyList do
 
       iex> MyList.reduce([], fn(n, acc) -> acc + n end)
       nil
-      iex> MyList.reduce([1], fn(_n, acc) -> acc + 5 end)
-      1
+      iex> MyList.reduce([2], fn(_x, acc) -> acc + 5 end)
+      2
       iex> MyList.reduce([1, 2, 3, 4], fn(n, acc) -> acc + n end)
       10
       iex> MyList.reduce([1, 2, 3, 4], fn(n, acc) -> acc * n end)
       24
   """
-  def reduce([], _fun), do: nil
-  def reduce([head | tail], fun), do: do_reduce(tail, head, fun)
+  def reduce(list, fun), do: do_reduce(list, fun)
 
-  def reverse([head | tail]), do: do_reverse(tail, [head])
+  @doc"""
+  Reverses the contents of a given `list`.
+
+  Returns a list.
+
+  ## Examples:
+
+      iex> MyList.reverse([])
+      []
+      iex> MyList.reverse([1])
+      [1]
+      iex> MyList.reverse([1, 2, 3])
+      [3, 2, 1]
+      iex> MyList.reverse(["a", "b", "c"])
+      ["c", "b", "a"]
+  """
+  def reverse(list), do: do_reverse(list)
 
   # private
 
@@ -118,11 +133,18 @@ defmodule MyList do
     do_sum(tail, count)
   end
 
+  defp do_reduce([], _fun), do: nil
+  defp do_reduce([head | nil], _fun), do: head
+  defp do_reduce([head | tail], fun), do: do_reduce(tail, head, fun)
+
   defp do_reduce([], acc, _fun), do: acc
   defp do_reduce([head | tail], acc, fun) do
     acc = fun.(head, acc)
     do_reduce(tail, acc, fun)
   end
+
+  defp do_reverse([]), do: []
+  defp do_reverse([head | tail]), do: do_reverse(tail, [head])
 
   defp do_reverse([], acc), do: acc
   defp do_reverse([head | tail], acc) do
