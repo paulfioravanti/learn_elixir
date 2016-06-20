@@ -1,0 +1,2 @@
+defmodule ComponentA do
+end
