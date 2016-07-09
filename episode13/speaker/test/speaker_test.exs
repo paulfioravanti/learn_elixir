@@ -1,12 +1,11 @@
 defmodule SpeakerTest do
   use ExUnit.Case
-  # import ExUnit.CaptureIO
 
   doctest Speaker
 
-  # NOTE: every `setup` has access to a `context` which can be populated
-  # by `@tag` values, and the `context` of each test contains the return
-  # value of the `setup` block
+  # NOTE: every `setup` has access to a `context` which can be
+  # populated by `@tag` values, and the `context` of each test
+  # contains the return value of the `setup` block
   setup context do
     pid = Kernel.spawn(Speaker, :speak, [])
     response = send(pid, context[:message])
@@ -33,10 +32,12 @@ defmodule SpeakerTest do
     end)
 
     send(pid, { :say, "Hello" })
-    assert_receive { :io_request, _, _, { :put_chars, :unicode, "Hello\n" } }
+    assert_receive {
+      :io_request, _, _, { :put_chars, :unicode, "Hello\n" }
+    }
 
-    # Just to cleanup pid which dies upon not receiving a correct response
-    # to the :io_request after a timeout
+    # Just to cleanup pid which dies upon not receiving a
+    # correct response to the :io_request after a timeout
     Process.exit(pid, :kill)
   end
 end
