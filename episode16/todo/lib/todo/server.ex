@@ -1,6 +1,26 @@
 defmodule Todo.Server do
   use Supervisor
 
+  def add_list(name) do
+    Supervisor.start_child(__MODULE__, [name])
+  end
+
+  def find_list(name) do
+    Enum.find lists, fn(child) ->
+      Todo.List.name(child) == name
+    end
+  end
+
+  def lists do
+    __MODULE__
+    |> Supervisor.which_children
+    |> Enum.map(fn({_, child, _, _}) -> child end)
+  end
+
+  def delete_list(list) do
+    Supervisor.terminate_child(__MODULE__, list)
+  end
+
   ###
   # Supervisor API
   ##
