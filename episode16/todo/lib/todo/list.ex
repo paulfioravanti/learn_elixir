@@ -6,11 +6,11 @@ defmodule Todo.List do
   end
 
   def add(list, item) do
-    GenServer.cast(list, { :add, item })
+    GenServer.cast(list, {:add, item})
   end
 
   def update(list, item) do
-    GenServer.cast(list, { :update, item })
+    GenServer.cast(list, {:update, item})
   end
 
   ###
@@ -22,25 +22,25 @@ defmodule Todo.List do
   end
 
   def init(name) do
-    state = %{ name: name, items: [] }
-    { :ok, state }
+    state = %{name: name, items: []}
+    {:ok, state}
   end
 
   def handle_call(:items, _from, state) do
-    { :reply, state.items, state }
+    {:reply, state.items, state}
   end
 
-  def handle_cast({ :add, item }, state) do
+  def handle_cast({:add, item}, state) do
     # state becomes the current state updated
     # with the new item put to the front
-    state = %{ state | items: [item | state.items] }
-    { :noreply, state }
+    state = %{state | items: [item | state.items]}
+    {:noreply, state}
   end
 
-  def handle_cast({ :update, item }, state) do
+  def handle_cast({:update, item}, state) do
     index = Enum.find_index(state.items, &(&1.id == item.id))
     items = List.replace_at(state.items, index, item)
-    state = %{ state | items: items }
-    { :noreply, state }
+    state = %{state | items: items}
+    {:noreply, state}
   end
 end
