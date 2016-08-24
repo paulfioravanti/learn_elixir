@@ -1,5 +1,5 @@
 defmodule Todo.Item do
-  alias __MODULE__
+  alias __MODULE__, as: Item
 
   defstruct id: nil, description: nil, completed: false
 

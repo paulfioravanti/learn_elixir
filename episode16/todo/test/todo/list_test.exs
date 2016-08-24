@@ -33,5 +33,6 @@ defmodule Todo.ListTest do
     List.update(list, updated_item)
 
     # Assert that the item was updated
+    assert List.items(list) == [updated_item]
   end
 end

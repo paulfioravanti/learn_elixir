@@ -1,8 +1,9 @@
 defmodule Todo.Server do
   use Supervisor
+  alias __MODULE__, as: Server
 
   def add_list(name) do
-    Supervisor.start_child(__MODULE__, [name])
+    Supervisor.start_child(Server, [name])
   end
 
   def find_list(name) do
@@ -18,7 +19,7 @@ defmodule Todo.Server do
   end
 
   def delete_list(list) do
-    Supervisor.terminate_child(__MODULE__, list)
+    Supervisor.terminate_child(Server, list)
   end
 
   ###
@@ -26,7 +27,7 @@ defmodule Todo.Server do
   ##
 
   def start_link do
-    Supervisor.start_link(__MODULE__, [], name: __MODULE__)
+    Supervisor.start_link(Server, [], name: Server)
   end
 
   def init(_) do
