@@ -1,11 +1,15 @@
 defmodule Todo.ListTest do
   use ExUnit.Case
 
-  alias Todo.List
-  alias Todo.Item
+  alias Todo.{List, Item, Cache}
 
   setup do
     {:ok, list} = List.start_link("Home")
+
+    on_exit fn ->
+      Cache.clear
+    end
+
     {:ok, list: list}
   end
 
